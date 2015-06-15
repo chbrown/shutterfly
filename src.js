@@ -60,9 +60,9 @@ function createUserInterface() {
     h('button', {'class': 'start'}, ['Start']),
     h('button', {'class': 'stop'}, ['Stop']),
     h('label', {}, [
-      h('span', {}, ['Period to wait between downloads: ']),
-      h('input', {type: 'number', value: 2000}, []),
-      h('span', {}, [' milliseconds']),
+      h('span', {}, ['Time to wait between downloads: ']),
+      h('input', {type: 'number', value: 2}, []),
+      h('span', {}, [' seconds']),
     ]),
   ]);
 }
@@ -79,11 +79,11 @@ function downloadURL(url) {
 }
 
 var style = document.head.appendChild(h('style', {}, ['']));
-style.sheet.insertRule('nav { position: fixed; top: 5px; left: 5px; right: 5px; padding: 0 10px; background-color: #EEE; border: 1px solid #222; box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.5); }', 0);
+style.sheet.insertRule('nav { position: fixed; top: 10px; left: 10px; right: 10px; padding: 5px 10px; background-color: #EEE; border: 1px solid #222; box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.75); z-index: 1000; }', 0);
 style.sheet.insertRule('button { height: auto; padding: 2px 6px 3px 6px; }', 0);
 style.sheet.insertRule('nav > * { margin: 5px; }', 0);
 style.sheet.insertRule('label { margin: 5px; float: right; }', 0);
-style.sheet.insertRule('input { width: 75px; text-align: right; }', 0);
+style.sheet.insertRule('input { width: 40px; text-align: right; }', 0);
 
 if (window.shutterfly_downloader) {
   window.shutterfly_downloader.parentNode.removeChild(window.shutterfly_downloader);
@@ -102,7 +102,8 @@ document.querySelector('button.stop').addEventListener('click', stopDownloads);
 
 function startDownloads() {
   clearInterval(window.timer);
-  var wait = document.querySelector('nav input').value;
+  // Hard lower limit of 10 milliseconds per download
+  var wait = Math.max(document.querySelector('nav input').value * 1000, 10);
   window.timer = setInterval(function() {
     var url = downloads.shift();
     refreshRemaining();
