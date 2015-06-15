@@ -1,3 +1,4 @@
+SHELL := bash
 PATH := /usr/local/bin/:$(PATH)
 
 all: bookmarklet.js
